@@ -122,10 +122,13 @@ function App(props) {
   const defi_pulse_contract = useExternalContractLoader(mainnetProvider, DEFI_PULSE, DEFI_PULSE_ABI)
   console.log("Defi Pulse contract on mainnet:",defi_pulse_contract)
   //
-  // Then read your DAI balance like:
-  const myMainnetDAIBalance = useContractReader({DAI: mainnetDAIContract},"DAI", "balanceOf",["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
-  console.log("🥇 myMainnetDAIBalance:",myMainnetDAIBalance)
+  // // Then read your DAI balance like:
+   const myMainnetDAIBalance = useContractReader({DAI: mainnetDAIContract},"DAI", "balanceOf",["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
+   console.log("🥇 myMainnetDAIBalance:",myMainnetDAIBalance)
 
+   //attempt to raed from defipulse contract:
+   const myDefiPulseInfo = useContractReader({DPI: defi_pulse_contract},"DPI", "getComponents")
+   console.log("🥇 Defi Pulse Components:",myDefiPulseInfo)
 
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts,"YourContract", "purpose")
@@ -283,6 +286,7 @@ function App(props) {
               readContracts={readContracts}
               purpose={purpose}
               setPurposeEvents={setPurposeEvents}
+              DPIcomponents={myDefiPulseInfo}
             />
           </Route>
           <Route path="/mainnetdai">
