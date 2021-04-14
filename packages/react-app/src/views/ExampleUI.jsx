@@ -3,26 +3,94 @@
 import React, { useState } from "react";
 import { Button, List, Divider, Input, Card, DatePicker, Slider, Switch, Progress, Spin } from "antd";
 import { SyncOutlined } from '@ant-design/icons';
-import { Address, Balance } from "../components";
+import { Address, Balance, TokenBalance } from "../components";
 import { parseEther, formatEther } from "@ethersproject/units";
+//victory imports below
+import { render } from "react-dom"
+import { VictoryChart, VictoryTheme, VictoryLine, VictoryAxis, VictoryPie, VictoryVoronoiContainer } from "victory"
+import "./ExampleUI.css"
+import { Token } from "@uniswap/sdk";
 
 export default function ExampleUI({purpose, setPurposeEvents, address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
 
+
   const [newPurpose, setNewPurpose] = useState("loading...");
+
+  const victorydata = [
+    {day: 1, price: 100},
+    {day: 2, price: 105},
+    {day: 3, price: 115},
+    {day: 4, price: 113},
+    {day: 5, price: 120},
+]
 
   return (
     <div>
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{border:"1px solid #cccccc", padding:16, width:400, margin:"auto",marginTop:64}}>
-        <h2>Example UI:</h2>
+      <div className="container1">
+        <h1>Moat Index</h1>
 
         <h4>purpose: {purpose}</h4>
 
         <Divider/>
 
-        <div style={{margin:8}}>
+{/* Line Chart displayed below */}
+      <div className="flexWrap">
+        <div className="VictoryLine">
+          <h2 className="chartTitle"> Moat Index Price </h2>
+            <VictoryChart 
+            domainPadding={20}
+            containerComponent={
+              <VictoryVoronoiContainer 
+                labels={({ datum }) => `Price: ${datum.price}, Date: ${datum.day}`}
+               /> 
+            }>
+            <VictoryAxis
+              style={{
+                axis: {
+                  stroke: '#cccccc' //change color of x axis
+                },
+                tickLabels: {
+                  fill: '#cccccc' //change color of x axis labels
+                }
+              }}
+            />
+            <VictoryAxis
+              dependentAxis
+              style={{
+                axis: {
+                  stroke: '#cccccc' //change color of x axis
+                },
+                tickLabels: {
+                  fill: '#cccccc' //change color of x axis labels
+                }
+              }}
+            />
+                <VictoryLine
+                    style={{
+                        data: { stroke: "#66A828" },
+                        parent: { border: "1px solid #cccccc" },
+                        labels: {fontSize: 12}
+                    }}
+                    data={victorydata}
+                    // data accessor for data values:
+                    x="day"
+                    y="price"
+                    animate={{
+                        duration: 2000,
+                        onLoad: { duration: 1000 }
+                    }}
+                    height={100}
+                    width={180}
+                />
+            </VictoryChart>
+            </div>
+
+        <div className="purposeButton">
+          <h2 className="currentPrice">Current Index Price:</h2>
+
           <Input onChange={(e)=>{setNewPurpose(e.target.value)}} />
           <Button onClick={()=>{
             console.log("newPurpose",newPurpose)
@@ -30,7 +98,7 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
             tx( writeContracts.YourContract.setPurpose(newPurpose) )
           }}>Set Purpose</Button>
         </div>
-
+      </div>
 
         <Divider />
 
@@ -43,17 +111,8 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
 
         <Divider />
 
-        ENS Address Example:
-        <Address
-          address={"0x34aA3F359A9D614239015126635CE7732c18fDF3"} /* this will show as austingriffith.eth */
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
-
-        <Divider/>
-
         {  /* use formatEther to display a BigNumber: */ }
-        <h2>Your Balance: {yourLocalBalance?formatEther(yourLocalBalance):"..."}</h2>
+        <h2>Your Eth Balance: {yourLocalBalance?formatEther(yourLocalBalance):"..."}</h2>
 
         <div>OR</div>
 
@@ -74,14 +133,6 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
         />
 
         <Divider/>
-
-
-        {  /* use formatEther to display a BigNumber: */ }
-        <h2>Your Balance: {yourLocalBalance?formatEther(yourLocalBalance):"..."}</h2>
-
-        <Divider/>
-
-
 
         Your Contract Address:
         <Address
@@ -137,87 +188,6 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
         </div>
 
       </div>
-
-      {/*
-        📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
-      */}
-      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
-        <h2>Events:</h2>
-        <List
-          bordered
-          dataSource={setPurposeEvents}
-          renderItem={(item) => {
-            return (
-              <List.Item key={item.blockNumber+"_"+item.sender+"_"+item.purpose}>
-                <Address
-                    address={item[0]}
-                    ensProvider={mainnetProvider}
-                    fontSize={16}
-                  /> =>
-                {item[1]}
-              </List.Item>
-            )
-          }}
-        />
-      </div>
-
-
-      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:256 }}>
-
-        <Card>
-
-          Check out all the <a href="https://github.com/austintgriffith/scaffold-eth/tree/master/packages/react-app/src/components" target="_blank" rel="noopener noreferrer">📦  components</a>
-
-        </Card>
-
-        <Card style={{marginTop:32}}>
-
-          <div>
-            There are tons of generic components included from <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">🐜  ant.design</a> too!
-          </div>
-
-          <div style={{marginTop:8}}>
-            <Button type="primary">
-              Buttons
-            </Button>
-          </div>
-
-          <div style={{marginTop:8}}>
-            <SyncOutlined spin />  Icons
-          </div>
-
-          <div style={{marginTop:8}}>
-            Date Pickers?
-            <div style={{marginTop:2}}>
-              <DatePicker onChange={()=>{}}/>
-            </div>
-          </div>
-
-          <div style={{marginTop:32}}>
-            <Slider range defaultValue={[20, 50]} onChange={()=>{}}/>
-          </div>
-
-          <div style={{marginTop:32}}>
-            <Switch defaultChecked onChange={()=>{}} />
-          </div>
-
-          <div style={{marginTop:32}}>
-            <Progress percent={50} status="active" />
-          </div>
-
-          <div style={{marginTop:32}}>
-            <Spin />
-          </div>
-
-
-        </Card>
-
-
-
-
-      </div>
-
 
     </div>
   );

@@ -14,7 +14,7 @@ import { formatEther, parseEther } from "@ethersproject/units";
 //import Hints from "./Hints";
 import { Hints, ExampleUI, Subgraph } from "./views"
 import { useThemeSwitcher } from "react-css-theme-switcher";
-import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
+import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS, DEFI_PULSE, DEFI_PULSE_ABI } from "./constants";
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -36,7 +36,7 @@ import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants"
 
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS['localhost']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS['kovan']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true
@@ -117,6 +117,10 @@ function App(props) {
   // If you want to bring in the mainnet DAI contract it would look like:
   const mainnetDAIContract = useExternalContractLoader(mainnetProvider, DAI_ADDRESS, DAI_ABI)
   console.log("🌍 DAI contract on mainnet:",mainnetDAIContract)
+
+  //Attempt to bring in the defi pulse contract :
+  const defi_pulse_contract = useExternalContractLoader(mainnetProvider, DEFI_PULSE, DEFI_PULSE_ABI)
+  console.log("Defi Pulse contract on mainnet:",defi_pulse_contract)
   //
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader({DAI: mainnetDAIContract},"DAI", "balanceOf",["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
@@ -216,7 +220,7 @@ function App(props) {
             <Link onClick={()=>{setRoute("/exampleui")}} to="/exampleui">ExampleUI</Link>
           </Menu.Item>
           <Menu.Item key="/mainnetdai">
-            <Link onClick={()=>{setRoute("/mainnetdai")}} to="/mainnetdai">Mainnet DAI</Link>
+            <Link onClick={()=>{setRoute("/mainnetdai")}} to="/mainnetdai">Defi Pulse</Link>
           </Menu.Item>
           <Menu.Item key="/subgraph">
             <Link onClick={()=>{setRoute("/subgraph")}} to="/subgraph">Subgraph</Link>
@@ -239,16 +243,13 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
 
-
-            { /* uncomment for a second contract:
             <Contract
-              name="SecondContract"
+              name="Second"
               signer={userProvider.getSigner()}
               provider={localProvider}
               address={address}
               blockExplorer={blockExplorer}
             />
-            */ }
 
             { /* Uncomment to display and interact with an external contract (DAI on mainnet):
             <Contract
@@ -286,12 +287,12 @@ function App(props) {
           </Route>
           <Route path="/mainnetdai">
             <Contract
-              name="DAI"
-              customContract={mainnetDAIContract}
+              name="Defi Pulse"
+              customContract={defi_pulse_contract}
               signer={userProvider.getSigner()}
               provider={mainnetProvider}
               address={address}
-              blockExplorer={"https://etherscan.io/"}
+              blockExplorer={blockExplorer}
             />
           </Route>
           <Route path="/subgraph">

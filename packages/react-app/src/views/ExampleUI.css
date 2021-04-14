@@ -1,0 +1,36 @@
+.flexWrap {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.container1 {
+    border:1px solid #cccccc;
+    padding:16px;
+    width: 75%;
+    margin:auto;
+    margin-top: 64;
+}
+
+.purposeButton {
+    margin-left: 100px;
+    padding: 10px;
+}
+
+.VictoryLine {
+    height: 500px;
+    width: 550px
+}
+
+.chartTitle {
+    color: #66A828;
+}
+
+.currentPrice {
+    color: #66A828;
+}
+
+.buyButton {
+    color: #66A828;
+}
