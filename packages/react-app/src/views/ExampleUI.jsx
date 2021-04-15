@@ -11,8 +11,7 @@ import { VictoryChart, VictoryTheme, VictoryLine, VictoryAxis, VictoryPie, Victo
 import "./ExampleUI.css"
 import { Token } from "@uniswap/sdk";
 
-export default function ExampleUI({purpose, setPurposeEvents, address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts, DPIcomponents }) {
-
+export default function ExampleUI({purpose, setPurposeEvents, address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts, DPIcomponents, DPIname }) {
 
   const [newPurpose, setNewPurpose] = useState("loading...");
 
@@ -103,6 +102,7 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
         <Divider />
 
         <div>
+          <h2>{DPIname}</h2>
           <ul>
             {DPIcomponents.map((position) => (
               <li>{position}</li>
